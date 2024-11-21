@@ -194,8 +194,7 @@
     <script>
         const toolbarOptions = [
             ['bold', 'italic', 'underline', 'strike'],
-            ['blockquote', 'code-block'],
-            ['link', 'image'],
+            ['image'],
             [{'script': 'sub'}, {'script': 'super'}],
             [{'font': ['serif', 'sans-serif', 'monospace', 'poppins']}],
             ['clean']
