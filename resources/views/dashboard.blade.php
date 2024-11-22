@@ -27,10 +27,11 @@
         <section class="bg-white px-6 py-6 pb-2 rounded-lg shadow-md overflow-hidden">
             <div class="flex justify-between align-center">
                 <h2 class="text-2xl font-bold mb-4">Latest News</h2>
-
+                @if (Auth::check() && Auth::user()->isAdminandSuper())
                 <div class="flex mb-4">
                     <button class="bg-blue-600 text-white py-2 px-4 rounded-lg" onclick="openModal()">Create + </button>
                 </div>
+                @endif
             </div>
 
             <div class="flex space-x-4 overflow-x-auto pb-4 hide-scrollbar">

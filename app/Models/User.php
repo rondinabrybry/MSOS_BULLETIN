@@ -50,4 +50,19 @@ class User extends Authenticatable
     {
         return $this->hasMany(Post::class);
     }
+
+    public function isAdmin()
+    {
+        return $this->usertype === 'admin';
+    }
+
+    public function isAdminandSuper()
+    {
+        return $this->usertype === 'admin' || $this->usertype === 'super';
+    }
+
+    public function isSuper()
+    {
+        return $this->usertype === 'super';
+    }
 }
