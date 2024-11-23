@@ -29,9 +29,11 @@
                     <li>
                         <a href="{{ route('dashboard') }}" class="block px-4 py-2 hover:bg-gray-100">{{ __('Home') }}</a>
                     </li>
+                    @if (Auth::user()->usertype === 'admin' || Auth::user()->usertype === 'super')
                     <li>
                         <a href="{{ route('author', ['user' => Auth::user()->id]) }}" class="block px-4 py-2 hover:bg-gray-100">{{ __('My Content') }}</a>
                     </li>
+                    @endif
                     <li>
                         <a href="{{ route('profile.edit') }}" class="block px-4 py-2 hover:bg-gray-100">{{ __('Profile') }}</a>
                     </li>

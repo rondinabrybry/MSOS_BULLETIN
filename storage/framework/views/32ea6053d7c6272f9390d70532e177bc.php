@@ -29,9 +29,11 @@
                     <li>
                         <a href="<?php echo e(route('dashboard')); ?>" class="block px-4 py-2 hover:bg-gray-100"><?php echo e(__('Home')); ?></a>
                     </li>
+                    <?php if(Auth::user()->usertype === 'admin' || Auth::user()->usertype === 'super'): ?>
                     <li>
                         <a href="<?php echo e(route('author', ['user' => Auth::user()->id])); ?>" class="block px-4 py-2 hover:bg-gray-100"><?php echo e(__('My Content')); ?></a>
                     </li>
+                    <?php endif; ?>
                     <li>
                         <a href="<?php echo e(route('profile.edit')); ?>" class="block px-4 py-2 hover:bg-gray-100"><?php echo e(__('Profile')); ?></a>
                     </li>
