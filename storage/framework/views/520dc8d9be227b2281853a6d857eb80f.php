@@ -24,11 +24,9 @@
                 display: none;
             }
 
-            /* Optional: Ensure consistent layout and overflow for the editor */
             #editor {
                 height: auto;
                 max-height: 24rem;
-                /* Adjustable max height for scrollability */
                 overflow-y: auto;
                 word-wrap: break-word;
             }
@@ -43,7 +41,7 @@
                 <?php endif; ?>
             </div>
 
-            <div class="flex space-x-4 overflow-x-auto pb-4 hide-scrollbar">
+            <div id="horizontalScrollContainer" class="flex space-x-4 overflow-x-auto pb-4 hide-scrollbar">
                 <?php if($posts->isEmpty()): ?>
                     <div class="w-full text-center py-4 text-lg text-gray-600">
                         No posts available.
@@ -97,7 +95,18 @@
             
 
         </section>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const scrollContainer = document.getElementById("horizontalScrollContainer");
 
+            if (scrollContainer) {
+                scrollContainer.addEventListener("wheel", (event) => {
+                    event.preventDefault();
+                    scrollContainer.scrollLeft += event.deltaY; // Use deltaY for horizontal scroll
+                });
+            }
+        });
+    </script>
         <section class="mt-2 mb-4">
             <div class="w-full">
                 <img alt="Group of people working together" class="rounded-lg w-full object-cover"
@@ -106,17 +115,32 @@
         </section>
     </main>
 
+    <style>
+        .ql-image-resize-handle {
+            width: 16px;
+            height: 16px;
+            background-color: #007bff; /* Blue color for visibility */
+            border-radius: 50%;
+            border: 2px solid #fff;
+            cursor: pointer;
+            touch-action: none; /* Ensure touch gestures work */
+        }
+    
+        .ql-image-resize-overlay {
+            border: 2px solid rgba(0, 123, 255, 0.5);
+        }
+    </style>
+    
+
 
     <div id="createModal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center">
-        <div class="bg-white rounded-lg shadow-lg w-[80%] h-[80%] flex">
-            <!-- Modal Header -->
-
+        <div class="bg-white rounded-lg shadow-lg w-full max-w-4xl h-full max-h-[90%] sm:w-[90%] sm:h-[90%] md:w-[80%] lg:h-[80%] flex flex-col overflow-auto touch-manipulation">
             <!-- Modal Content -->
-            <form action="" id="postForm" enctype="multipart/form-data" class="flex flex-grow">
+            <form action="" id="postForm" enctype="multipart/form-data" class="flex flex-grow flex-col lg:flex-row">
                 <?php echo csrf_field(); ?>
-
+    
                 <!-- Left Panel -->
-                <div class="w-1/3 p-6 flex flex-col gap-4 border-r">
+                <div class="lg:w-1/3 p-4 sm:p-6 flex flex-col gap-4 border-r overflow-auto">
                     <!-- Category Selection -->
                     <div>
                         <?php if (isset($component)) { $__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $component; } ?>
@@ -153,7 +177,7 @@
                             <option value="Technology">Technology</option>
                         </select>
                     </div>
-
+    
                     <!-- Title Input -->
                     <div>
                         <?php if (isset($component)) { $__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $component; } ?>
@@ -197,7 +221,7 @@
 <?php unset($__componentOriginal18c21970322f9e5c938bc954620c12bb); ?>
 <?php endif; ?>
                     </div>
-
+    
                     <!-- Cover Photo Input -->
                     <div>
                         <?php if (isset($component)) { $__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $component; } ?>
@@ -225,7 +249,7 @@
                             onchange="displayImage(this)" required>
                         <img id="coverPreview" class="mt-4 hidden rounded-md shadow-md max-w-full" />
                     </div>
-
+    
                     <!-- Action Buttons -->
                     <div class="flex justify-between mt-auto">
                         <button type="button" onclick="closeModal()"
@@ -237,9 +261,9 @@
                         </button>
                     </div>
                 </div>
-
+    
                 <!-- Right Panel -->
-                <div class="w-2/3 p-6 flex flex-col">
+                <div class="lg:w-2/3 p-4 sm:p-6 flex flex-col overflow-auto">
                     <?php if (isset($component)) { $__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.input-label','data' => ['for' => 'editor','value' => __('Content')]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -267,6 +291,7 @@
             </form>
         </div>
     </div>
+    
 
 
 
@@ -303,14 +328,23 @@
             [{'font': ['serif', 'sans-serif', 'monospace', 'poppins']}],
             ['clean']
         ];
+        
+
         var quill = new Quill('#editor', {
             theme: 'snow',
             modules: {
-                imageResize: {},
-                toolbar: toolbarOptions
-            }
+                imageResize: {
+                    modules: ['Resize', 'DisplaySize', 'Toolbar'], // Include necessary submodules
+                    handleStyles: {
+                        backgroundColor: 'blue',
+                        borderRadius: '50%',
+                        width: '12px',
+                        height: '12px',
+                    },
+                },
+                toolbar: toolbarOptions,
+            },
         });
-
         document.getElementById('postForm').addEventListener('submit', function(e) {
             e.preventDefault();
 

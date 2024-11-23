@@ -24,8 +24,8 @@
         }
     </style>
 </head>
-<body class="bg-blue-600 flex items-center justify-center min-h-screen">
-    <div class="bg-white rounded-lg shadow-lg flex flex-col md:flex-row w-11/12 md:w-3/4 max-w-4xl">
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white rounded-lg shadow-2xl flex flex-col md:flex-row w-11/12 md:w-3/4 max-w-4xl">
         <style>
         @media (max-width: 767px) {
             .carousel-container {
@@ -33,7 +33,7 @@
             }
         }
     </style>
-        <div class="carousel-container w-full md:w-1/2 bg-gray-100 p-8 rounded-b-lg md:rounded-r-lg md:rounded-bl-none flex flex-col items-center justify-center mb-8 md:mb-0">
+        <div class="carousel-container w-full md:w-1/2 p-8 rounded-b-lg md:rounded-lg flex flex-col items-center justify-center mb-8 md:mb-0">
             <div class="carousel w-full">
                 <a href="#" target="_blank">
                     <div class="carousel-item active">
@@ -195,7 +195,7 @@
 <?php endif; ?>
 
                     <?php if(Route::has('password.request')): ?>
-                    <a class="absolute right-2 top-2 text-blue-500 text-sm" href="<?php echo e(route('password.request')); ?>"><?php echo e(__('Forgot your password?')); ?></a>
+                    <a class="absolute right-2 top-2 text-blue-500 text-sm" href="https://shop.msoshub.com/forgot-password" target="_blank"><?php echo e(__('Forgot your password?')); ?></a>
                     <?php endif; ?>
                     <i class="fas fa-eye absolute right-2 bottom-3 text-gray-500 cursor-pointer" onclick="myFunction()"></i>
                 </div>
