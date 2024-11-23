@@ -24,7 +24,6 @@ class PostController extends Controller
                 'cover_photo' => 'required|image|max:2048',
             ]);
     
-            // Process cover photo
             $coverPhotoPath = null;
             if ($request->hasFile('cover_photo')) {
                 $coverPhoto = $request->file('cover_photo');
@@ -39,11 +38,9 @@ class PostController extends Controller
                 $coverPhotoPath = 'cover_photos/' . $fileName;
             }
     
-            // Process editor content
             $content = $request->content;
             $content = $this->processEditorImages($content);
     
-            // Save the post
             Post::create([
                 'title' => $request->title,
                 'category' => $request->category,
@@ -61,41 +58,34 @@ class PostController extends Controller
     public function update(Request $request, Post $post)
 {
     try {
-        // Validate the incoming data
         $request->validate([
             'title' => 'required|string|max:255',
             'category' => 'required|string',
             'content' => 'required|string',
-            'cover_photo' => 'nullable|image|max:2048', // Make cover photo optional for update
+            'cover_photo' => 'nullable|image|max:2048',
         ]);
 
-        // Process cover photo if provided
-        $coverPhotoPath = $post->cover_photo; // Keep the existing cover photo if not updated
+        $coverPhotoPath = $post->cover_photo;
         if ($request->hasFile('cover_photo')) {
             $coverPhoto = $request->file('cover_photo');
             $destinationPath = public_path('storage/cover_photos');
 
-            // Create directory if not exists
             if (!file_exists($destinationPath)) {
                 mkdir($destinationPath, 0755, true);
             }
 
-            // Delete old cover photo if exists
             if ($coverPhotoPath && file_exists(public_path('storage/' . $coverPhotoPath))) {
                 unlink(public_path('storage/' . $coverPhotoPath));
             }
 
-            // Save the new cover photo
             $fileName = uniqid() . '_' . $coverPhoto->getClientOriginalName();
             $coverPhoto->move($destinationPath, $fileName);
             $coverPhotoPath = 'cover_photos/' . $fileName;
         }
 
-        // Process editor content
         $content = $request->content;
-        $content = $this->processEditorImages($content); // Reprocess any embedded images if needed
-
-        // Update the post with the new data
+        $content = $this->processEditorImages($content);
+        
         $post->update([
             'title' => $request->title,
             'category' => $request->category,
@@ -103,10 +93,8 @@ class PostController extends Controller
             'cover_photo' => $coverPhotoPath,
         ]);
 
-        // Return a success response
         return response()->json(['message' => 'Post updated successfully']);
     } catch (\Exception $e) {
-        // Handle any errors
         return response()->json(['error' => $e->getMessage()], 500);
     }
 }
@@ -123,21 +111,17 @@ class PostController extends Controller
         foreach ($images as $img) {
             $src = $img->getAttribute('src');
     
-            // Check if image is base64-encoded
             if (strpos($src, 'data:image') === 0) {
-                $fileName = uniqid() . '.png'; // Adjust extension based on content type
+                $fileName = uniqid() . '.png';
                 $path = public_path('storage/editor_images/' . $fileName);
     
-                // Create directory if not exists
                 if (!file_exists(dirname($path))) {
                     mkdir(dirname($path), 0755, true);
                 }
     
-                // Decode base64 and save image
                 list(, $base64Data) = explode(',', $src);
                 file_put_contents($path, base64_decode($base64Data));
     
-                // Update the src attribute in the DOM
                 $img->setAttribute('src', asset('storage/editor_images/' . $fileName));
             }
         }
@@ -150,5 +134,4 @@ class PostController extends Controller
     {
         return view( 'article', compact('post'));
     }
-
 }

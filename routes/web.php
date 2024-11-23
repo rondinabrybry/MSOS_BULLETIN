@@ -19,7 +19,6 @@ Route::get('/dashboard', [HomeController::class, 'index'])->middleware('auth')->
 Route::middleware('auth')->group(function () {
     Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
     Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
-
     
     Route::get('/article/{post}', [PostController::class, 'show'])->name('article');
 

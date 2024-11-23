@@ -21,7 +21,21 @@
                 overflow-y: auto;
                 word-wrap: break-word;
             }
+            .ql-image-resize-handle {
+                width: 16px;
+                height: 16px;
+                background-color: #007bff;
+                border-radius: 50%;
+                border: 2px solid #fff;
+                cursor: pointer;
+                touch-action: none;
+            }
+        
+            .ql-image-resize-overlay {
+                border: 2px solid rgba(0, 123, 255, 0.5);
+            }
         </style>
+
         <section class="bg-white px-6 py-6 pb-2 rounded-lg shadow-md overflow-hidden">
             <div class="flex justify-between align-center">
                 <h2 class="text-2xl font-bold mb-4">Latest News</h2>
@@ -85,42 +99,222 @@
             
 
         </section>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const scrollContainer = document.getElementById("horizontalScrollContainer");
+<style>
+    .category-section {
+    margin-bottom: 20px;
+}
 
-            if (scrollContainer) {
-                scrollContainer.addEventListener("wheel", (event) => {
-                    event.preventDefault();
-                    scrollContainer.scrollLeft += event.deltaY; // Use deltaY for horizontal scroll
-                });
-            }
-        });
-    </script>
-        <section class="mt-2 mb-4">
-            <div class="w-full">
-                <img alt="Group of people working together" class="rounded-lg w-full object-cover"
-                    src="{{ asset('storage/img/banner.png') }}" />
+.category-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.post-item {
+    background: #f9f9f9;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.post-item {
+    position: relative;
+    max-width: 200px;
+    height: 150px;
+    overflow: hidden;
+}
+
+.below {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
+    padding: 10px;
+}
+    </style>
+<!-- Display banner image -->
+<section class="mt-2 mb-4">
+    <div class="w-full">
+        <img alt="Group of people working together" class="rounded-lg w-full object-cover"
+            src="{{ asset('storage/img/banner.png') }}" />
+    </div>
+</section>
+
+@foreach ($postsGroupedByCategory as $category => $posts)
+    @if ($posts->isNotEmpty())
+        <div class="category-section mb-2 p-6">
+            <h3 class="category-title">{{ $category }}</h3>
+
+            <div class="relative">
+                <!-- Previous Button -->
+                <button 
+                    class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black text-white p-2 rounded-full z-10 prev-btn"
+                    aria-label="Previous posts"
+                >
+                    &#60;
+                </button>
+
+                <div class="overflow-x-auto no-scrollbar">
+                    <div class="flex gap-4 min-w-min px-4">
+                        @foreach ($posts as $post)
+                            <a href="{{ route('article', ['post' => $post->id]) }}" class="post-link flex-shrink-0">
+                                <div class="post-item w-[200px] h-[150px] relative">
+                                    <img 
+                                        src="{{ asset('storage/' . $post->cover_photo) }}" 
+                                        alt="{{ $post->user->name }}" 
+                                        class="object-cover w-full h-full rounded-lg"
+                                    >
+                                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black p-2 rounded-b-lg">
+                                        <div class="truncate">
+                                            <h4 class="font-bold text-white truncate">{{ $post->title }}</h4>
+                                            <p class="text-[10px] text-white">
+                                                {{ $post->user->name }} · 
+                                                <span class="text-[8px]">{{ $post->created_at->diffForHumans() }}</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+
+                <!-- Next Button -->
+                <button 
+                    class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black text-white p-2 rounded-full z-10 next-btn"
+                    aria-label="Next posts"
+                >
+                    &#62;
+                </button>
             </div>
-        </section>
+        </div>
+    @endif
+@endforeach
+
+<style>
+/* Hide scrollbar but keep functionality */
+.no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;     /* Firefox */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari and Opera */
+}
+
+/* Ensure buttons are more visible and tappable on mobile */
+@media (max-width: 768px) {
+    .prev-btn, .next-btn {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(0, 0, 0, 1);
+        touch-action: manipulation;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const sections = document.querySelectorAll('.category-section');
+    
+    sections.forEach(section => {
+        const scrollContainer = section.querySelector('.overflow-x-auto');
+        const prevBtn = section.querySelector('.prev-btn');
+        const nextBtn = section.querySelector('.next-btn');
+        
+        if (prevBtn && nextBtn && scrollContainer) {
+            // Update button visibility based on scroll position
+            const updateButtonVisibility = () => {
+                const isAtStart = scrollContainer.scrollLeft === 0;
+                const isAtEnd = scrollContainer.scrollLeft + scrollContainer.clientWidth >= scrollContainer.scrollWidth;
+                
+                prevBtn.style.opacity = isAtStart ? '0.3' : '0.7';
+                nextBtn.style.opacity = isAtEnd ? '0.3' : '0.7';
+                
+                prevBtn.style.cursor = isAtStart ? 'not-allowed' : 'pointer';
+                nextBtn.style.cursor = isAtEnd ? 'not-allowed' : 'pointer';
+            };
+
+            // Scroll handling with touch-friendly distance
+            const scrollDistance = window.innerWidth <= 768 ? 210 : 220; // Slightly less scroll on mobile
+
+            prevBtn.addEventListener('click', () => {
+                scrollContainer.scrollBy({
+                    left: -scrollDistance,
+                    behavior: 'smooth'
+                });
+            });
+
+            nextBtn.addEventListener('click', () => {
+                scrollContainer.scrollBy({
+                    left: scrollDistance,
+                    behavior: 'smooth'
+                });
+            });
+
+            // Add touch scrolling for mobile
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+
+            scrollContainer.addEventListener('mousedown', (e) => {
+                isDown = true;
+                startX = e.pageX - scrollContainer.offsetLeft;
+                scrollLeft = scrollContainer.scrollLeft;
+            });
+
+            scrollContainer.addEventListener('touchstart', (e) => {
+                isDown = true;
+                startX = e.touches[0].pageX - scrollContainer.offsetLeft;
+                scrollLeft = scrollContainer.scrollLeft;
+            });
+
+            scrollContainer.addEventListener('mouseleave', () => {
+                isDown = false;
+            });
+
+            scrollContainer.addEventListener('mouseup', () => {
+                isDown = false;
+            });
+
+            scrollContainer.addEventListener('touchend', () => {
+                isDown = false;
+            });
+
+            scrollContainer.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - scrollContainer.offsetLeft;
+                const walk = (x - startX) * 2;
+                scrollContainer.scrollLeft = scrollLeft - walk;
+            });
+
+            scrollContainer.addEventListener('touchmove', (e) => {
+                if (!isDown) return;
+                const x = e.touches[0].pageX - scrollContainer.offsetLeft;
+                const walk = (x - startX) * 2;
+                scrollContainer.scrollLeft = scrollLeft - walk;
+            });
+
+            // Update button visibility on scroll and initial load
+            scrollContainer.addEventListener('scroll', updateButtonVisibility);
+            updateButtonVisibility();
+
+            // Prevent button double-tap zoom on mobile
+            prevBtn.addEventListener('touchend', (e) => e.preventDefault());
+            nextBtn.addEventListener('touchend', (e) => e.preventDefault());
+        }
+    });
+});
+</script>
+
+
     </main>
 
-    <style>
-        .ql-image-resize-handle {
-            width: 16px;
-            height: 16px;
-            background-color: #007bff; /* Blue color for visibility */
-            border-radius: 50%;
-            border: 2px solid #fff;
-            cursor: pointer;
-            touch-action: none; /* Ensure touch gestures work */
-        }
-    
-        .ql-image-resize-overlay {
-            border: 2px solid rgba(0, 123, 255, 0.5);
-        }
-    </style>
-    
+
 
 
     <div id="createModal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center">
@@ -186,7 +380,18 @@
     </div>
     
 
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const scrollContainer = document.getElementById("horizontalScrollContainer");
 
+            if (scrollContainer) {
+                scrollContainer.addEventListener("wheel", (event) => {
+                    event.preventDefault();
+                    scrollContainer.scrollLeft += event.deltaY;
+                });
+            }
+        });
+    </script>
 
     <script>
         function displayImage(input) {
