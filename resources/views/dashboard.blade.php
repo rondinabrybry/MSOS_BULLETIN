@@ -125,13 +125,12 @@
 
     <div id="createModal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center">
         <div class="bg-white rounded-lg shadow-lg w-full max-w-4xl h-full max-h-[90%] sm:w-[90%] sm:h-[90%] md:w-[80%] lg:h-[80%] flex flex-col overflow-auto touch-manipulation">
-            <!-- Modal Content -->
+
             <form action="" id="postForm" enctype="multipart/form-data" class="flex flex-grow flex-col lg:flex-row">
                 @csrf
     
-                <!-- Left Panel -->
                 <div class="lg:w-1/3 p-4 sm:p-6 flex flex-col gap-4 border-r overflow-auto">
-                    <!-- Category Selection -->
+                    
                     <div>
                         <x-input-label for="category" :value="__('Category')" />
                         <select id="category" name="category"
@@ -149,7 +148,6 @@
                         </select>
                     </div>
     
-                    <!-- Title Input -->
                     <div>
                         <x-input-label for="title" :value="__('Title')" />
                         <x-text-input type="text" id="title" name="title"
@@ -157,16 +155,15 @@
                             required />
                     </div>
     
-                    <!-- Cover Photo Input -->
                     <div>
                         <x-input-label for="cover_photo" :value="__('Cover Photo')" />
                         <input type="file" id="cover_photo" name="cover_photo" accept="image/*"
                             class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
                             onchange="displayImage(this)" required>
+                            <span class="text-xs text-gray-600">Best size 500x300 px</span>
                         <img id="coverPreview" class="mt-4 hidden rounded-md shadow-md max-w-full" />
                     </div>
     
-                    <!-- Action Buttons -->
                     <div class="flex justify-between mt-auto">
                         <button type="button" onclick="closeModal()"
                             class="bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-4 rounded-lg">
@@ -178,7 +175,6 @@
                     </div>
                 </div>
     
-                <!-- Right Panel -->
                 <div class="lg:w-2/3 p-4 sm:p-6 flex flex-col overflow-auto">
                     <x-input-label for="editor" :value="__('Content')" />
                     <div id="editor" class="mt-3 p-2 border rounded-lg overflow-y-auto flex-grow">
@@ -199,7 +195,7 @@
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     preview.src = e.target.result;
-                    preview.classList.remove('hidden'); // Show image when selected
+                    preview.classList.remove('hidden');
                 };
                 reader.readAsDataURL(input.files[0]);
             } else {
@@ -231,7 +227,7 @@
             theme: 'snow',
             modules: {
                 imageResize: {
-                    modules: ['Resize', 'DisplaySize', 'Toolbar'], // Include necessary submodules
+                    modules: ['Resize', 'DisplaySize', 'Toolbar'],
                     handleStyles: {
                         backgroundColor: 'blue',
                         borderRadius: '50%',
