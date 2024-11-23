@@ -197,7 +197,7 @@
                     <?php if(Route::has('password.request')): ?>
                     <a class="absolute right-2 top-2 text-blue-500 text-sm" href="<?php echo e(route('password.request')); ?>"><?php echo e(__('Forgot your password?')); ?></a>
                     <?php endif; ?>
-                    <i class="fas fa-eye absolute right-2 bottom-3 text-gray-500"></i>
+                    <i class="fas fa-eye absolute right-2 bottom-3 text-gray-500 cursor-pointer" onclick="myFunction()"></i>
                 </div>
 
                 <div class="mb-6 flex items-center">
@@ -209,6 +209,17 @@
             
         </div>
     </div>
+
+    <script>
+        function myFunction() {
+          var x = document.getElementById("password");
+          if (x.type === "password") {
+            x.type = "text";
+          } else {
+            x.type = "password";
+          }
+        }
+        </script>
     
     <script>
         const indicators = document.querySelectorAll('.carousel-indicator');

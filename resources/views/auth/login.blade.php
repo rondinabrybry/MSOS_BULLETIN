@@ -86,7 +86,7 @@
                     @if (Route::has('password.request'))
                     <a class="absolute right-2 top-2 text-blue-500 text-sm" href="{{ route('password.request') }}">{{ __('Forgot your password?') }}</a>
                     @endif
-                    <i class="fas fa-eye absolute right-2 bottom-3 text-gray-500"></i>
+                    <i class="fas fa-eye absolute right-2 bottom-3 text-gray-500 cursor-pointer" onclick="myFunction()"></i>
                 </div>
 
                 <div class="mb-6 flex items-center">
@@ -98,6 +98,17 @@
             {{-- <p class="mt-4 text-center text-gray-600">{{ __('Forgot your password?') }} <a class="text-blue-500" href="{{ route('register') }}">{{ __('Sign up') }}</a></p> --}}
         </div>
     </div>
+
+    <script>
+        function myFunction() {
+          var x = document.getElementById("password");
+          if (x.type === "password") {
+            x.type = "text";
+          } else {
+            x.type = "password";
+          }
+        }
+        </script>
     
     <script>
         const indicators = document.querySelectorAll('.carousel-indicator');
