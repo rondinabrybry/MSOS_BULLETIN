@@ -152,13 +152,13 @@
 
 <?php $__currentLoopData = $postsGroupedByCategory; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category => $posts): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
     <?php if($posts->isNotEmpty()): ?>
-        <div class="category-section mb-2 p-6">
+        <div class="category-section px-6">
             <h3 class="category-title"><?php echo e($category); ?></h3>
 
             <div class="relative">
                 <!-- Previous Button -->
                 <button 
-                    class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/80 text-white p-2 rounded-full z-10 prev-btn touch-manipulation"
+                    class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/80 text-white p-2 rounded-full z-10 prev-btn touch-manipulation"
                     aria-label="Previous posts"
                 >
                     &#60;
@@ -191,7 +191,7 @@
 
                 <!-- Next Button -->
                 <button 
-                    class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/80 text-white p-2 rounded-full z-10 next-btn touch-manipulation"
+                    class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/80 text-white p-2 rounded-full z-10 next-btn touch-manipulation"
                     aria-label="Next posts"
                 >
                     &#62;

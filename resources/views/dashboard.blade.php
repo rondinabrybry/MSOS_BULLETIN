@@ -142,7 +142,7 @@
 
 @foreach ($postsGroupedByCategory as $category => $posts)
     @if ($posts->isNotEmpty())
-        <div class="category-section mb-2 p-6">
+        <div class="category-section px-6">
             <h3 class="category-title">{{ $category }}</h3>
 
             <div class="relative">
