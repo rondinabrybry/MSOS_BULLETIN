@@ -13,7 +13,7 @@
     <meta property="og:title" content="<?php echo e($post->title); ?>">
     <meta property="og:description" content="<?php echo e(\Illuminate\Support\Str::limit(strip_tags($post->content), 200)); ?>">
     <meta property="og:url" content="<?php echo e(url()->current()); ?>">
-    <meta property="og:image" content="<?php echo e(asset('storage/' . $post->cover_photo)); ?>">
+    <meta data-n-head="ssr" data-hid="og:image:type" property="og:image:type" content="<?php echo e(asset('storage/' . $post->cover_photo)); ?>">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:site_name" content="MSOS Bulletin">
