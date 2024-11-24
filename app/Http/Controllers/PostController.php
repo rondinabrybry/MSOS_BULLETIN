@@ -176,7 +176,7 @@ public function destroy(Post $post)
             $message = 'Reaction removed';
         } else {
             $post->reactions()->create(['user_id' => $user->id]);
-            $message = 'Reaction added';
+            $message = 'You reacted to this post';
         }
         
         return response()->json([

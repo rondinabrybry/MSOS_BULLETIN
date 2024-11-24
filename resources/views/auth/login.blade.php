@@ -83,10 +83,10 @@
                         required autocomplete="current-password" />
                     <x-input-error :messages="$errors->get('password')" class="mt-2" />
 
-                    @if (Route::has('password.request'))
+                    {{-- @if (Route::has('password.request'))
                     <a class="absolute right-2 top-2 text-blue-500 text-sm" href="https://shop.msoshub.com/forgot-password" target="_blank">{{ __('Forgot your password?') }}</a>
-                    @endif
-                    <i class="fas fa-eye absolute right-2 bottom-3 text-gray-500 cursor-pointer" onclick="myFunction()"></i>
+                    @endif --}}
+                    <i class="fas fa-eye absolute right-3 bottom-3 text-gray-500 cursor-pointer" onclick="myFunction()"></i>
                 </div>
 
                 <div class="mb-6 flex items-center">
@@ -95,7 +95,7 @@
                 </div>
                 <button class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-200">{{ __('Log in') }}</button>
             </form>
-            {{-- <p class="mt-4 text-center text-gray-600">{{ __('Forgot your password?') }} <a class="text-blue-500" href="{{ route('register') }}">{{ __('Sign up') }}</a></p> --}}
+            <p class="mt-4 text-center text-gray-600">{{ __('Forgot your password?') }} <a class="text-blue-500" href="{{ route('register') }}">{{ __('Sign up') }}</a></p>
         </div>
     </div>
 
