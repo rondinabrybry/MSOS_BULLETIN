@@ -77,8 +77,6 @@
                 {!! $post->content !!}
             </div>
         </article>
-
-
         <div id="shareModal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
             <div class="bg-white rounded-lg shadow-lg w-96 p-6">
                 <div class="text-center">
@@ -106,29 +104,10 @@
         </div>
         
         <script>
-        async function openShareModal(postId) {
-            try {
-                const response = await fetch('{{ route("generate.short.url") }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({ post_id: postId })
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                document.getElementById('shareUrl').value = data.shortUrl;
-                document.getElementById('shareModal').classList.remove('hidden');
-            } catch (error) {
-                console.error('Error generating short URL:', error);
-                alert('Error generating share link');
-            }
+        function openShareModal(postId) {
+            const shareUrl = `https://bulletin.msoshub.com/posts/${postId}`;
+            document.getElementById('shareUrl').value = shareUrl;
+            document.getElementById('shareModal').classList.remove('hidden');
         }
         
         function closeShareModal() {
@@ -156,6 +135,7 @@
             }
         });
         </script>
+
 <script>
 function toggleReaction(postId) {
     @auth
