@@ -9,7 +9,7 @@
             <h1 class="text-3xl font-bold">
                 <span class="text-red-500 font-bold">{{ $post->category ?? 'Category' }}</span>: {{ $post->title }}
             </h1>
-                    {{-- Add this right after the article content, before the Google Ads section --}}
+            
             <div class="flex items-center justify-center gap-2">
                 <button 
                     id="reactButton" 
@@ -68,8 +68,6 @@
         </article>
 </script>
 
-
-{{-- Add this script section at the bottom of your file --}}
 <script>
 function toggleReaction(postId) {
     @auth
@@ -86,10 +84,8 @@ function toggleReaction(postId) {
             const svg = button.querySelector('svg');
             const count = document.getElementById('reactionCount');
             
-            // Update reaction count
             count.textContent = data.reactionCount;
             
-            // Toggle button styles
             if (data.hasReacted) {
                 button.classList.add('bg-red-50', 'border-red-200', 'text-red-500');
                 button.classList.remove('bg-gray-50', 'border-gray-200');
@@ -102,7 +98,6 @@ function toggleReaction(postId) {
                 svg.classList.remove('scale-110');
             }
             
-            // Show feedback message
             const message = document.createElement('div');
             message.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-fade-in-out';
             message.textContent = data.message;

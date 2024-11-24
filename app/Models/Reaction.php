@@ -18,7 +18,7 @@ class Reaction extends Model
         return $this->belongsTo(Post::class);
     }
 
-    protected $with = ['reactions']; // Always eager load reactions
+    protected $with = ['reactions']; 
 
     public function reactions()
     {

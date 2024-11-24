@@ -15,7 +15,6 @@ return new class extends Migration
             $table->string('reaction_id')->nullable();
             $table->timestamps();
             
-            // Ensure users can only react once per post
             $table->unique(['user_id', 'post_id']);
         });
     }
