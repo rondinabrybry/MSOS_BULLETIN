@@ -16,7 +16,7 @@
     <meta property="og:title" content="{{ $post->title }}">
     <meta property="og:description" content="{{ \Illuminate\Support\Str::limit(strip_tags($post->content), 200) }}">
     <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:image" content="{{ asset('storage/' . $post->cover_image) }}"> <!-- Adjust to your actual image column -->
+    <meta property="og:image" content="{{ asset('storage/' . $post->cover_photo) }}">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:site_name" content="MSOS Bulletin">
