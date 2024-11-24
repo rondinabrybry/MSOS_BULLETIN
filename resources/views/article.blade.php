@@ -271,7 +271,7 @@
         }
 
         const toolbarOptions = [
-            ['bold', 'italic', 'underline', 'strike'],
+            ['bold', 'italic', 'underline', 'strike', 'link'],
             ['image'],
             [{
                 'script': 'sub'

@@ -315,7 +315,7 @@
                             setTimeout(() => {
                                 successMessage.remove();
                                 window.location.href = data.redirect;
-                            }, 2000);
+                            }, 1000);
                         } else {
                             alert(data.message || 'Error deleting post');
                         }
@@ -376,7 +376,7 @@
         }
 
         const toolbarOptions = [
-            ['bold', 'italic', 'underline', 'strike'],
+            ['bold', 'italic', 'underline', 'strike', 'link'],
             ['image'],
             [{
                 'script': 'sub'
