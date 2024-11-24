@@ -158,7 +158,7 @@
             <div class="relative">
                 <!-- Previous Button -->
                 <button 
-                    class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black text-white p-2 rounded-full z-10 prev-btn"
+                    class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/80 text-white p-2 rounded-full z-10 prev-btn touch-manipulation"
                     aria-label="Previous posts"
                 >
                     &#60;
@@ -191,7 +191,7 @@
 
                 <!-- Next Button -->
                 <button 
-                    class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black text-white p-2 rounded-full z-10 next-btn"
+                    class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/80 text-white p-2 rounded-full z-10 next-btn touch-manipulation"
                     aria-label="Next posts"
                 >
                     &#62;
@@ -202,27 +202,44 @@
 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
 <style>
-/* Hide scrollbar but keep functionality */
 .no-scrollbar {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;     /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
 .no-scrollbar::-webkit-scrollbar {
-    display: none;  /* Chrome, Safari and Opera */
+    display: none;
 }
 
-/* Ensure buttons are more visible and tappable on mobile */
+/* Enhanced mobile button styles */
 @media (max-width: 768px) {
     .prev-btn, .next-btn {
-        width: 32px;
-        height: 32px;
+        width: 40px;
+        height: 40px;
         display: flex;
         align-items: center;
         justify-content: center;
-        background-color: rgba(0, 0, 0, 1);
+        font-size: 18px;
+        background-color: rgba(0, 0, 0, 0.8);
+        -webkit-tap-highlight-color: transparent;
         touch-action: manipulation;
     }
+
+    /* Increase touch target size */
+    .prev-btn::before, .next-btn::before {
+        content: '';
+        position: absolute;
+        top: -10px;
+        bottom: -10px;
+        left: -10px;
+        right: -10px;
+    }
+}
+
+/* Add active state for better feedback */
+.prev-btn:active, .next-btn:active {
+    background-color: rgba(0, 0, 0, 1);
+    transform: translateY(-50%) scale(0.95);
 }
 </style>
 
@@ -235,92 +252,82 @@ document.addEventListener('DOMContentLoaded', function() {
         const prevBtn = section.querySelector('.prev-btn');
         const nextBtn = section.querySelector('.next-btn');
         
-        if (prevBtn && nextBtn && scrollContainer) {
-            // Update button visibility based on scroll position
-            const updateButtonVisibility = () => {
-                const isAtStart = scrollContainer.scrollLeft === 0;
-                const isAtEnd = scrollContainer.scrollLeft + scrollContainer.clientWidth >= scrollContainer.scrollWidth;
-                
-                prevBtn.style.opacity = isAtStart ? '0.3' : '0.7';
-                nextBtn.style.opacity = isAtEnd ? '0.3' : '0.7';
-                
-                prevBtn.style.cursor = isAtStart ? 'not-allowed' : 'pointer';
-                nextBtn.style.cursor = isAtEnd ? 'not-allowed' : 'pointer';
-            };
+        if (!prevBtn || !nextBtn || !scrollContainer) return;
 
-            // Scroll handling with touch-friendly distance
-            const scrollDistance = window.innerWidth <= 768 ? 210 : 220; // Slightly less scroll on mobile
+        // Update button visibility based on scroll position
+        const updateButtonVisibility = () => {
+            const isAtStart = scrollContainer.scrollLeft <= 0;
+            const isAtEnd = scrollContainer.scrollLeft + scrollContainer.clientWidth >= scrollContainer.scrollWidth - 1;
+            
+            prevBtn.style.opacity = isAtStart ? '0.3' : '1';
+            nextBtn.style.opacity = isAtEnd ? '0.3' : '1';
+            prevBtn.disabled = isAtStart;
+            nextBtn.disabled = isAtEnd;
+        };
 
-            prevBtn.addEventListener('click', () => {
-                scrollContainer.scrollBy({
-                    left: -scrollDistance,
-                    behavior: 'smooth'
-                });
+        // Calculate scroll distance based on viewport
+        const getScrollDistance = () => {
+            return window.innerWidth <= 768 ? 210 : 420; // Full card width + gap on mobile
+        };
+
+        // Improved button click handlers
+        const handleButtonClick = (direction) => {
+            const distance = getScrollDistance();
+            const targetScroll = scrollContainer.scrollLeft + (direction * distance);
+            
+            scrollContainer.scrollTo({
+                left: targetScroll,
+                behavior: 'smooth'
             });
+        };
 
-            nextBtn.addEventListener('click', () => {
-                scrollContainer.scrollBy({
-                    left: scrollDistance,
-                    behavior: 'smooth'
-                });
-            });
+        // Add event listeners with improved touch handling
+        prevBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!prevBtn.disabled) {
+                handleButtonClick(-1);
+            }
+        });
 
-            // Add touch scrolling for mobile
-            let isDown = false;
-            let startX;
-            let scrollLeft;
+        nextBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!nextBtn.disabled) {
+                handleButtonClick(1);
+            }
+        });
 
-            scrollContainer.addEventListener('mousedown', (e) => {
-                isDown = true;
-                startX = e.pageX - scrollContainer.offsetLeft;
-                scrollLeft = scrollContainer.scrollLeft;
-            });
+        // Touch scroll handling
+        let touchStartX = 0;
+        let touchStartScrollLeft = 0;
+        let isTouching = false;
 
-            scrollContainer.addEventListener('touchstart', (e) => {
-                isDown = true;
-                startX = e.touches[0].pageX - scrollContainer.offsetLeft;
-                scrollLeft = scrollContainer.scrollLeft;
-            });
+        scrollContainer.addEventListener('touchstart', (e) => {
+            isTouching = true;
+            touchStartX = e.touches[0].pageX;
+            touchStartScrollLeft = scrollContainer.scrollLeft;
+        }, { passive: true });
 
-            scrollContainer.addEventListener('mouseleave', () => {
-                isDown = false;
-            });
+        scrollContainer.addEventListener('touchmove', (e) => {
+            if (!isTouching) return;
+            const touchDelta = touchStartX - e.touches[0].pageX;
+            scrollContainer.scrollLeft = touchStartScrollLeft + touchDelta;
+        }, { passive: true });
 
-            scrollContainer.addEventListener('mouseup', () => {
-                isDown = false;
-            });
+        scrollContainer.addEventListener('touchend', () => {
+            isTouching = false;
+        }, { passive: true });
 
-            scrollContainer.addEventListener('touchend', () => {
-                isDown = false;
-            });
-
-            scrollContainer.addEventListener('mousemove', (e) => {
-                if (!isDown) return;
-                e.preventDefault();
-                const x = e.pageX - scrollContainer.offsetLeft;
-                const walk = (x - startX) * 2;
-                scrollContainer.scrollLeft = scrollLeft - walk;
-            });
-
-            scrollContainer.addEventListener('touchmove', (e) => {
-                if (!isDown) return;
-                const x = e.touches[0].pageX - scrollContainer.offsetLeft;
-                const walk = (x - startX) * 2;
-                scrollContainer.scrollLeft = scrollLeft - walk;
-            });
-
-            // Update button visibility on scroll and initial load
-            scrollContainer.addEventListener('scroll', updateButtonVisibility);
-            updateButtonVisibility();
-
-            // Prevent button double-tap zoom on mobile
-            prevBtn.addEventListener('touchend', (e) => e.preventDefault());
-            nextBtn.addEventListener('touchend', (e) => e.preventDefault());
-        }
+        // Update button visibility on scroll and resize
+        scrollContainer.addEventListener('scroll', updateButtonVisibility);
+        window.addEventListener('resize', updateButtonVisibility);
+        
+        // Initial visibility update
+        updateButtonVisibility();
     });
 });
 </script>
-
 
     </main>
 
