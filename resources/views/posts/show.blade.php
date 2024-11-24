@@ -10,7 +10,19 @@
         content="{{ $metaDescription ?? 'Explore the latest news, academic programs, student resources, and campus life at Cebu Technological University - Danao Campus. Stay informed about admissions, scholarships, events, and opportunities for student success in a vibrant university community' }}">
     <meta name="keywords"
         content="{{ $metaKeywords ?? 'university, higher education, college life, campus, academic programs, student resources, faculty, research, scholarships, admissions, university news, student success, study tips, campus events, degree programs, online courses, university rankings, international students, student organizations, alumni, university community, career services, campus facilities, financial aid, student engagement, academic excellence, student support, university events, campus culture, educational opportunities, university guide, study abroad, university life, campus tours, student housing, university admissions process' }}">
-    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
+    
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="{{ $post->title }}">
+    <meta property="og:description" content="{{ \Illuminate\Support\Str::limit(strip_tags($post->content), 200) }}">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:image" content="{{ asset('storage/' . $post->cover_image) }}"> <!-- Adjust to your actual image column -->
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="MSOS Bulletin">
+
+    
+        <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
     <title>MSOS | News</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
