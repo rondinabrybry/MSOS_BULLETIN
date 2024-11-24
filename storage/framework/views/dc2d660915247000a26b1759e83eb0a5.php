@@ -12,11 +12,6 @@
         <title>MSOS | News</title>
         <!-- Fonts -->
         <script src="https://cdn.tailwindcss.com"></script>
-        <!-- Quill Editor -->
-        <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
-        <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-        <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
-        <script src="<?php echo e(asset('js/image-resize.min.js')); ?>"></script>
         
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
         <link rel="preconnect" href="https://fonts.googleapis.com">
