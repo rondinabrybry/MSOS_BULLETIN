@@ -77,6 +77,7 @@
                 {!! $post->content !!}
             </div>
         </article>
+        
         <div id="shareModal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
             <div class="bg-white rounded-lg shadow-lg w-96 p-6">
                 <div class="text-center">
