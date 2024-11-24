@@ -132,7 +132,7 @@
     padding: 10px;
 }
     </style>
-<!-- Display banner image -->
+    
 <section class="mt-2 mb-4">
     <div class="w-full">
         <img alt="Group of people working together" class="rounded-lg w-full object-cover"
@@ -146,7 +146,7 @@
             <h3 class="category-title">{{ $category }}</h3>
 
             <div class="relative">
-                <!-- Previous Button -->
+                
                 <button 
                     class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/80 text-white p-2 rounded-full z-10 prev-btn touch-manipulation"
                     aria-label="Previous posts"
@@ -179,7 +179,7 @@
                     </div>
                 </div>
 
-                <!-- Next Button -->
+                
                 <button 
                     class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/80 text-white p-2 rounded-full z-10 next-btn touch-manipulation"
                     aria-label="Next posts"
@@ -201,7 +201,7 @@
     display: none;
 }
 
-/* Enhanced mobile button styles */
+
 @media (max-width: 768px) {
     .prev-btn, .next-btn {
         width: 40px;
@@ -215,7 +215,7 @@
         touch-action: manipulation;
     }
 
-    /* Increase touch target size */
+    
     .prev-btn::before, .next-btn::before {
         content: '';
         position: absolute;
@@ -226,7 +226,7 @@
     }
 }
 
-/* Add active state for better feedback */
+
 .prev-btn:active, .next-btn:active {
     background-color: rgba(0, 0, 0, 1);
     transform: translateY(-50%) scale(0.95);
@@ -244,7 +244,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (!prevBtn || !nextBtn || !scrollContainer) return;
 
-        // Update button visibility based on scroll position
+
         const updateButtonVisibility = () => {
             const isAtStart = scrollContainer.scrollLeft <= 0;
             const isAtEnd = scrollContainer.scrollLeft + scrollContainer.clientWidth >= scrollContainer.scrollWidth - 1;
@@ -255,12 +255,12 @@ document.addEventListener('DOMContentLoaded', function() {
             nextBtn.disabled = isAtEnd;
         };
 
-        // Calculate scroll distance based on viewport
+
         const getScrollDistance = () => {
-            return window.innerWidth <= 768 ? 210 : 420; // Full card width + gap on mobile
+            return window.innerWidth <= 768 ? 210 : 420;
         };
 
-        // Improved button click handlers
+
         const handleButtonClick = (direction) => {
             const distance = getScrollDistance();
             const targetScroll = scrollContainer.scrollLeft + (direction * distance);
@@ -271,7 +271,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         };
 
-        // Add event listeners with improved touch handling
+
         prevBtn.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -288,7 +288,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Touch scroll handling
+
         let touchStartX = 0;
         let touchStartScrollLeft = 0;
         let isTouching = false;
@@ -309,19 +309,32 @@ document.addEventListener('DOMContentLoaded', function() {
             isTouching = false;
         }, { passive: true });
 
-        // Update button visibility on scroll and resize
+
         scrollContainer.addEventListener('scroll', updateButtonVisibility);
         window.addEventListener('resize', updateButtonVisibility);
         
-        // Initial visibility update
+        
         updateButtonVisibility();
     });
 });
 </script>
 
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6444619677143056"
+crossorigin="anonymous"></script>
+<!-- responsive -->
+<ins class="adsbygoogle"
+    style="display:block"
+    data-ad-client="ca-pub-6444619677143056"
+    data-ad-slot="9969715782"
+    data-ad-format="auto"
+    data-full-width-responsive="true"></ins>
+<script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
     </main>
-
-
 
 
     <div id="createModal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center">
