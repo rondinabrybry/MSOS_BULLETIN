@@ -594,6 +594,7 @@ crossorigin="anonymous"></script>
                         console.log('Validation Errors:', data.errors);
                         alert('There were errors in your form.');
                     } else if (data.message) {
+                        location.reload();
                         alert(data.message);
                         closeModal();
                     } else {

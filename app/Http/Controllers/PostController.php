@@ -102,7 +102,6 @@ class PostController extends Controller
 }
 public function destroy(Post $post)
 {
-    // Check if user is authorized to delete
     if (auth()->user()->usertype !== 'super') {
         return response()->json([
             'success' => false,
@@ -111,7 +110,6 @@ public function destroy(Post $post)
     }
 
     try {
-        // Delete the cover photo from storage if it exists
         if ($post->cover_photo) {
             Storage::delete('public/' . $post->cover_photo);
         }
