@@ -4,7 +4,13 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\ShareController;
 use Illuminate\Support\Facades\Route;
+
+
+Route::post('/generate-short-url', [ShareController::class, 'generateShortUrl'])->name('generate.short.url');
+Route::get('/s/{code}', [ShareController::class, 'redirectToPost'])->name('short.url.redirect');
+
 
 Route::get('/', function () {
     return view('auth.login');
@@ -42,5 +48,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+
+
 
 require __DIR__.'/auth.php';
