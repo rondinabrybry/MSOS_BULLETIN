@@ -210,7 +210,7 @@
                             setTimeout(() => {
                                 successMessage.remove();
                                 window.location.href = data.redirect;
-                            }, 2000);
+                            }, 1000);
                         } else {
                             alert(data.message || 'Error deleting post');
                         }
