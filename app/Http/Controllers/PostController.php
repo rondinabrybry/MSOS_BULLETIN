@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -96,6 +97,37 @@ class PostController extends Controller
         return response()->json(['message' => 'Post updated successfully']);
     } catch (\Exception $e) {
         return response()->json(['error' => $e->getMessage()], 500);
+    }
+}
+public function destroy(Post $post)
+{
+    // Check if user is authorized to delete
+    if (auth()->user()->usertype !== 'super') {
+        return response()->json([
+            'success' => false,
+            'message' => 'Unauthorized action.'
+        ], 403);
+    }
+
+    try {
+        // Delete the cover photo from storage if it exists
+        if ($post->cover_photo) {
+            Storage::delete('public/' . $post->cover_photo);
+        }
+
+        // Delete the post
+        $post->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Post deleted successfully.',
+            'redirect' => route('dashboard')
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Error deleting post: ' . $e->getMessage()
+        ], 500);
     }
 }
     
