@@ -56,9 +56,8 @@
                 @csrf
                 @method('PUT')
 
-                <!-- Left Panel -->
                 <div class="lg:w-1/3 p-4 sm:p-6 flex flex-col gap-4 border-r overflow-auto">
-                    <!-- Category -->
+                    
                     <div>
                         <x-input-label for="category" :value="__('Category')" />
                         <select id="category" name="category"
@@ -81,7 +80,6 @@
                         </select>
                     </div>
 
-                    <!-- Title -->
                     <div>
                         <x-input-label for="title" :value="__('Title')" />
                         <x-text-input type="text" id="title" name="title" value="{{ $post->title }}"
@@ -89,7 +87,6 @@
                             required />
                     </div>
 
-                    <!-- Cover Photo -->
                     <div>
                         <x-input-label for="cover_photo" :value="__('Cover Photo')" />
                         <input type="file" id="cover_photo" name="cover_photo" accept="image/*"
@@ -100,7 +97,6 @@
                             src="{{ asset('storage/' . $post->cover_photo) }}" />
                     </div>
 
-                    <!-- Action Buttons -->
                     <div class="flex justify-between mt-auto">
                         <button type="button" onclick="closeEditModal()"
                             class="bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-4 rounded-lg">
@@ -112,7 +108,6 @@
                     </div>
                 </div>
 
-                <!-- Right Panel -->
                 <div class="lg:w-2/3 p-4 sm:p-6 flex flex-col overflow-auto">
                     <x-input-label for="editor" :value="__('Content')" />
                     <div id="editor" class="mt-3 p-2 border rounded-lg overflow-y-auto flex-grow">
@@ -127,7 +122,7 @@
     <div id="deleteModal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
         <div class="bg-white rounded-lg shadow-lg w-96 p-6">
             <div class="text-center">
-                <!-- Warning Icon -->
+                
                 <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
                     <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -206,7 +201,6 @@
                     .then(data => {
                         closeDeleteModal();
                         if (data.success) {
-                            window.location.href = data.redirect;
                             const successMessage = document.createElement('div');
                             successMessage.className =
                                 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-fade-in-out';
