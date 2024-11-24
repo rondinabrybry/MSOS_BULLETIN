@@ -5,9 +5,38 @@
 <x-app-layout :pageTitle="$pageTitle">
     <main class="container mx-auto mt-8 w-full lg:w-3/4">
         <article class="bg-white px-6 py-6 rounded-lg shadow-md">
-            <h1 class="text-3xl font-bold mb-4">
+            <div class="flex justify-between mb-4">
+            <h1 class="text-3xl font-bold">
                 <span class="text-red-500 font-bold">{{ $post->category ?? 'Category' }}</span>: {{ $post->title }}
             </h1>
+                    {{-- Add this right after the article content, before the Google Ads section --}}
+            <div class="flex items-center justify-center gap-2">
+                <button 
+                    id="reactButton" 
+                    onclick="toggleReaction({{ $post->id }})"
+                    class="flex items-center gap-2 px-4 py-2 rounded-full border transition-all duration-200 ease-in-out
+                    {{ auth()->check() && $post->reactions && $post->reactions->where('user_id', auth()->id())->count() > 0
+                        ? 'bg-red-50 border-red-200 text-red-500' 
+                        : 'bg-gray-50 border-gray-200 hover:bg-red-50 hover:border-red-200 hover:text-red-500' 
+                    }}"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" 
+                        class="h-6 w-6 transition-transform duration-200 ease-in-out {{ auth()->check() && $post->reactions && $post->reactions->where('user_id', auth()->id())->count() > 0 ? 'scale-110' : 'scale-100' }}" 
+                        fill="{{ auth()->check() && $post->reactions && $post->reactions->where('user_id', auth()->id())->count() > 0 ? 'currentColor' : 'none' }}" 
+                        viewBox="0 0 24 24" 
+                        stroke="currentColor"
+                    >
+                        <path stroke-linecap="round" 
+                            stroke-linejoin="round" 
+                            stroke-width="2" 
+                            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" 
+                        />
+                    </svg>
+                    <span id="reactionCount" class="font-medium">{{ $post->reactions ? $post->reactions->count() : 0 }}</span>
+                </button>
+            </div>
+        </div>
+
             <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center">
                     <a href="{{ route('author', ['user' => $post->user->id]) }}">
@@ -37,6 +66,59 @@
                 {!! $post->content !!}
             </div>
         </article>
+</script>
+
+
+{{-- Add this script section at the bottom of your file --}}
+<script>
+function toggleReaction(postId) {
+    @auth
+        fetch(`/posts/${postId}/react`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Accept': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            const button = document.getElementById('reactButton');
+            const svg = button.querySelector('svg');
+            const count = document.getElementById('reactionCount');
+            
+            // Update reaction count
+            count.textContent = data.reactionCount;
+            
+            // Toggle button styles
+            if (data.hasReacted) {
+                button.classList.add('bg-red-50', 'border-red-200', 'text-red-500');
+                button.classList.remove('bg-gray-50', 'border-gray-200');
+                svg.setAttribute('fill', 'currentColor');
+                svg.classList.add('scale-110');
+            } else {
+                button.classList.remove('bg-red-50', 'border-red-200', 'text-red-500');
+                button.classList.add('bg-gray-50', 'border-gray-200');
+                svg.setAttribute('fill', 'none');
+                svg.classList.remove('scale-110');
+            }
+            
+            // Show feedback message
+            const message = document.createElement('div');
+            message.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-fade-in-out';
+            message.textContent = data.message;
+            document.body.appendChild(message);
+            
+            setTimeout(() => message.remove(), 2000);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while processing your reaction');
+        });
+    @else
+        window.location.href = '{{ route("login") }}';
+    @endauth
+}
+</script>
 
 
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6444619677143056"

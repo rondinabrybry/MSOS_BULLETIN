@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\Reaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -165,5 +166,26 @@ public function destroy(Post $post)
     public function show(Post $post)
     {
         return view( 'article', compact('post'));
+    }
+
+     public function toggleReaction(Post $post)
+    {
+        $user = auth()->user();
+        $hasReacted = $post->reactions()->where('user_id', $user->id)->exists();
+        
+        if ($hasReacted) {
+            $post->reactions()->where('user_id', $user->id)->delete();
+            $message = 'Reaction removed';
+        } else {
+            $post->reactions()->create(['user_id' => $user->id]);
+            $message = 'Reaction added';
+        }
+        
+        return response()->json([
+            'success' => true,
+            'message' => $message,
+            'reactionCount' => $post->reactions()->count(),
+            'hasReacted' => !$hasReacted
+        ]);
     }
 }

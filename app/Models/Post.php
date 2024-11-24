@@ -16,10 +16,17 @@ class Post extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function reactions()
+    {
+        return $this->hasMany(Reaction::class);
+    }
 
     public function posts()
 {
     return $this->hasMany(Post::class);
 }
-
+public function hasReactionFrom($userId)
+{
+    return $this->reactions()->where('user_id', $userId)->exists();
+}
 }
