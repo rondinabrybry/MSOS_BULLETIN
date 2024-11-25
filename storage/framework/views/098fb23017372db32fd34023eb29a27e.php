@@ -13,24 +13,23 @@
 <?php endif; ?>
 <?php $component->withAttributes(['pageTitle' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($pageTitle)]); ?>
     <main class="container mx-auto mt-8 w-full lg:w-3/4">
-        <article class="bg-white px-6 py-6 rounded-lg shadow-md">
+        <article class="bg-white px-6 py-6 mx-auto rounded-lg shadow-md max-w-5xl">
             <div class="flex justify-between mb-4">
-            <h1 class="text-3xl font-bold">
-                <span class="text-red-500 font-bold"><?php echo e($post->category ?? 'Category'); ?></span>: <?php echo e($post->title); ?>
-
+            <h1 class="text-xl font-bold">
+                <span class="text-red-500 font-bold"><?php echo e($post->category ?? 'Category'); ?></span>
             </h1>
             
             <div class="flex items-center justify-center gap-2">
                 <button 
                     id="reactButton" 
                     onclick="toggleReaction(<?php echo e($post->id); ?>)"
-                    class="flex items-center gap-2 px-4 py-2 rounded-full border transition-all duration-200 ease-in-out
+                    class="flex items-center gap-2 px-4 py-2 rounded-full border transition-all duration-200 ease-in-out text-xs
                     <?php echo e(auth()->check() && $post->reactions && $post->reactions->where('user_id', auth()->id())->count() > 0
                         ? 'bg-red-50 border-red-200 text-red-500' 
                         : 'bg-gray-50 border-gray-200 hover:bg-red-50 hover:border-red-200 hover:text-red-500'); ?>"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" 
-                        class="h-6 w-6 transition-transform duration-200 ease-in-out <?php echo e(auth()->check() && $post->reactions && $post->reactions->where('user_id', auth()->id())->count() > 0 ? 'scale-110' : 'scale-100'); ?>" 
+                        class="h-4 w-4 transition-transform duration-200 ease-in-out <?php echo e(auth()->check() && $post->reactions && $post->reactions->where('user_id', auth()->id())->count() > 0 ? 'scale-110' : 'scale-100'); ?>" 
                         fill="<?php echo e(auth()->check() && $post->reactions && $post->reactions->where('user_id', auth()->id())->count() > 0 ? 'currentColor' : 'none'); ?>" 
                         viewBox="0 0 24 24" 
                         stroke="currentColor"
@@ -46,9 +45,9 @@
 
                 <button 
                 onclick="openShareModal(<?php echo e($post->id); ?>)"
-                class="flex items-center gap-2 px-4 py-2 rounded-full border transition-all duration-200 ease-in-out bg-gray-50 border-gray-200 hover:bg-blue-50 hover:border-blue-200 hover:text-blue-500"
+                class="flex items-center text-xs gap-2 px-4 py-2 rounded-full border transition-all duration-200 ease-in-out bg-gray-50 border-gray-200 hover:bg-blue-50 hover:border-blue-200 hover:text-blue-500"
             >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
                 </svg>
                 <span class="font-medium">Share</span>
@@ -71,20 +70,79 @@
                 <div class="action-btn">
                     <?php if(auth()->check() && auth()->user()->id == $post->user->id): ?>
                         <button onclick="openEditModal()"
-                            class="text-white bg-blue-600 rounded-lg px-2 py-1 hover:bg-blue-900 text-xs">Edit
-                            Post</button>
+                            class="text-white bg-blue-600 rounded-lg px-4 py-1 hover:bg-blue-900 text-sm">
+                            <i class="fas fa-edit"></i>
+                        </button>
                     <?php endif; ?>
                     <?php if(auth()->check() && auth()->user()->usertype === 'super'): ?>
                         <button onclick="openDeleteModal(<?php echo e($post->id); ?>)"
-                            class="text-white bg-red-600 rounded-lg px-2 py-1 hover:bg-red-900 text-xs">Delete
-                            Post</button>
+                            class="text-white bg-red-600 rounded-lg px-4 py-1 hover:bg-red-900 text-sm">
+                            <i class="fa fa-trash"></i>
+                        </button>
                     <?php endif; ?>
                 </div>
             </div>
-            <div>
-                <link href="https://cdn.quilljs.com/1.2.2/quill.snow.css" rel="stylesheet">
-                <?php echo $post->content; ?>
 
+            <style>
+                #editor {
+                    height: auto;
+                    max-height: 24rem;
+                    overflow-y: auto;
+                    word-wrap: break-word;
+                }
+        
+                .ql-image-resize-handle {
+                    width: 16px;
+                    height: 16px;
+                    background-color: #007bff;
+                    border-radius: 50%;
+                    border: 2px solid #fff;
+                    cursor: pointer;
+                    touch-action: none;
+                }
+        
+                .ql-image-resize-overlay {
+                    border: 2px solid rgba(0, 123, 255, 0.5);
+                }
+                .ql-align-center {
+                    text-align: center;
+                }
+                .ql-align-right {
+                    float: right;
+                }
+                .ql-align-justify {
+                    text-align: justify;
+                    text-justify: inter-word;
+                }
+                .post-content a {
+                    color: #007bff;
+                }
+                .post-content h1 {
+                    font-size: 34px;
+                }
+                .post-content h2 {
+                    font-size: 30px;
+                }
+                .post-content ol {
+                    list-style-type: number;
+                }
+
+                .post-content ul {
+                    list-style-type: disc;
+                }
+            </style>
+            <div class="whole-content px-4">
+                <h1 class="text-3xl font-bold mt-6 mb-4">
+                    <span class="text-black font-bold"><?php echo e($post->title); ?></span>
+                </h1>
+
+                <hr>
+
+                <div class="post-content">
+                    <link href="https://cdn.quilljs.com/1.2.2/quill.snow.css" rel="stylesheet">
+                    <?php echo $post->content; ?>
+
+                </div>
             </div>
         </article>
         
@@ -130,7 +188,6 @@
             shareUrl.select();
             document.execCommand('copy');
             
-            // Show feedback
             const message = document.createElement('div');
             message.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-fade-in-out';
             message.textContent = 'Link copied to clipboard!';
@@ -139,7 +196,6 @@
             setTimeout(() => message.remove(), 2000);
         }
         
-        // Close modal when clicking outside
         document.getElementById('shareModal').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeShareModal();
@@ -398,29 +454,6 @@ function toggleReaction(postId) {
         </div>
     </div>
 
-    <style>
-        #editor {
-            height: auto;
-            max-height: 24rem;
-            overflow-y: auto;
-            word-wrap: break-word;
-        }
-
-        .ql-image-resize-handle {
-            width: 16px;
-            height: 16px;
-            background-color: #007bff;
-            border-radius: 50%;
-            border: 2px solid #fff;
-            cursor: pointer;
-            touch-action: none;
-        }
-
-        .ql-image-resize-overlay {
-            border: 2px solid rgba(0, 123, 255, 0.5);
-        }
-    </style>
-
     <script>
         let postIdToDelete = null;
 
@@ -523,14 +556,9 @@ function toggleReaction(postId) {
         const toolbarOptions = [
             ['bold', 'italic', 'underline', 'strike', 'link'],
             ['image'],
-            [{
-                'script': 'sub'
-            }, {
-                'script': 'super'
-            }],
-            [{
-                'font': ['serif', 'sans-serif', 'monospace', 'poppins']
-            }],
+            [{ 'align': [] }],
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            [{ 'header': 1 }, { 'header': 2 }],
             ['clean']
         ];
 

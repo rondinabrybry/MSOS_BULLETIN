@@ -8,15 +8,19 @@
     <meta name="google-adsense-account" content="ca-pub-6444619677143056">
     <meta name="description" content="<?php echo e($metaDescription ?? 'Explore the latest news, academic programs, student resources, and campus life at Cebu Technological University - Danao Campus. Stay informed about admissions, scholarships, events, and opportunities for student success in a vibrant university community'); ?>">
     <meta name="keywords" content="<?php echo e($metaKeywords ?? 'university, higher education, college life, campus, academic programs, student resources, faculty, research, scholarships, admissions, university news, student success, study tips, campus events, degree programs, online courses, university rankings, international students, student organizations, alumni, university community, career services, campus facilities, financial aid, student engagement, academic excellence, student support, university events, campus culture, educational opportunities, university guide, study abroad, university life, campus tours, student housing, university admissions process'); ?>">
-
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="<?php echo e($post->title); ?>">
-    <meta property="og:description" content="<?php echo e(\Illuminate\Support\Str::limit(strip_tags($post->content), 200)); ?>">
-    <meta property="og:url" content="<?php echo e(url()->current()); ?>">
-    <meta data-n-head="ssr" data-hid="og:image:type" property="og:image:type" content="<?php echo e(asset('storage/' . $post->cover_photo)); ?>">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:site_name" content="MSOS Bulletin">
+    
+    
+    <meta property="fb:app_id" content="1928575444318418" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="<?php echo e($post->title); ?>" />
+    <meta property="og:description" content="<?php echo e(\Illuminate\Support\Str::limit(strip_tags($post->content), 200)); ?>" />
+    <meta property="og:url" content="<?php echo e(url()->current()); ?>" />
+    <meta property="og:image" content="<?php echo e(asset('storage/' . $post->cover_photo)); ?>" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="MSOS Bulletin" />
+    
 
     
     <link rel="icon" type="image/png" href="<?php echo e(asset('favicon.png')); ?>">
@@ -63,26 +67,36 @@
             </div>
         </header>
         <main class="container mx-auto mt-8 w-full lg:w-3/4">
-            <article class="bg-white px-6 py-6 rounded-lg shadow-md">
+            <article class="bg-white px-6 py-6 mx-auto rounded-lg shadow-md max-w-5xl">
                 <div class="flex justify-between mb-4">
-                    <h1 class="text-3xl font-bold">
-                        <span class="text-red-500 font-bold"><?php echo e($post->category ?? 'Category'); ?></span>:
-                        <?php echo e($post->title); ?>
-
+                    <h1 class="text-xl font-bold">
+                        <span class="text-red-500 font-bold"><?php echo e($post->category ?? 'Category'); ?></span>
                     </h1>
 
                     <div class="flex items-center justify-center gap-2">
-                        <button
-                            class="flex items-center gap-2 px-4 py-2 rounded-full border transition-all duration-200 ease-in-out">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                class="h-6 w-6 transition-transform duration-200 ease-in-out" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                            </svg>
-                            <span id="reactionCount"
-                                class="font-medium"><?php echo e($post->reactions ? $post->reactions->count() : 0); ?></span>
-                        </button>
+                        <a href="<?php echo e(route('login')); ?>">
+                            <button
+                                class="flex items-center gap-2 px-4 py-2 rounded-full border transition-all duration-200 ease-in-out text-xs">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="h-4 w-4 transition-transform duration-200 ease-in-out" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                </svg>
+                                <span id="reactionCount"
+                                    class="font-medium"><?php echo e($post->reactions ? $post->reactions->count() : 0); ?></span>
+                            </button>
+                        </a>
+
+                        <button 
+                        onclick="openShareModal(<?php echo e($post->id); ?>)"
+                        class="flex items-center text-xs gap-2 px-4 py-2 rounded-full border transition-all duration-200 ease-in-out bg-gray-50 border-gray-200 hover:bg-blue-50 hover:border-blue-200 hover:text-blue-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
+                        </svg>
+                        <span class="font-medium">Share</span>
+                    </button>
+
                     </div>
                 </div>
                 <div class="flex items-center justify-between mb-4">
@@ -97,9 +111,65 @@
                         </div>
                     </div>
                 </div>
-                <div>
-                    <?php echo $post->content; ?>
+                <style>
+                    #editor {
+                        height: auto;
+                        max-height: 24rem;
+                        overflow-y: auto;
+                        word-wrap: break-word;
+                    }
+            
+                    .ql-image-resize-handle {
+                        width: 16px;
+                        height: 16px;
+                        background-color: #007bff;
+                        border-radius: 50%;
+                        border: 2px solid #fff;
+                        cursor: pointer;
+                        touch-action: none;
+                    }
+            
+                    .ql-image-resize-overlay {
+                        border: 2px solid rgba(0, 123, 255, 0.5);
+                    }
+                    .ql-align-center {
+                        text-align: center;
+                    }
+                    .ql-align-right {
+                        float: right;
+                    }
+                    .ql-align-justify {
+                        text-align: justify;
+                        text-justify: inter-word;
+                    }
+                    .post-content a {
+                        color: #007bff;
+                    }
+                    .post-content h1 {
+                        font-size: 34px;
+                    }
+                    .post-content h2 {
+                        font-size: 30px;
+                    }
+                    .post-content ol {
+                        list-style-type: number;
+                    }
+    
+                    .post-content ul {
+                        list-style-type: disc;
+                    }
+                </style>
+                <div class="whole-content px-4">
+                    <h1 class="text-3xl font-bold mt-6 mb-4">
+                        <span class="text-black font-bold"><?php echo e($post->title); ?></span>
+                    </h1>
+    
+                    <hr>
+    
+                    <div class="post-content">
+                        <?php echo $post->content; ?>
 
+                    </div>
                 </div>
                 <img alt="Author Image" class="w-12 h-12 rounded-full"
                 src="<?php echo e(asset('storage/' . $post->cover_photo)); ?>" hidden/>
@@ -114,6 +184,65 @@
             </script>
         </main>
     </div>
+    <div id="shareModal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-lg w-96 p-6">
+            <div class="text-center">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
+                    </svg>
+                </div>
+                
+                <h3 class="text-lg font-medium text-gray-900 mb-4">Share this post</h3>
+                <div class="flex items-center justify-between bg-gray-100 p-3 rounded-lg mb-4">
+                    <input type="text" id="shareUrl" class="bg-transparent flex-1 border-none focus:ring-0" readonly>
+                    <button onclick="copyShareUrl()" class="ml-2 text-blue-600 hover:text-blue-800">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                    </button>
+                </div>
+    
+                <button onclick="closeShareModal()" class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+    function openShareModal(postId) {
+        const shareUrl = `https://bulletin.msoshub.com/posts/${postId}`;
+        document.getElementById('shareUrl').value = shareUrl;
+        document.getElementById('shareModal').classList.remove('hidden');
+    }
+    
+    function closeShareModal() {
+        document.getElementById('shareModal').classList.add('hidden');
+    }
+    
+    function copyShareUrl() {
+        const shareUrl = document.getElementById('shareUrl');
+        shareUrl.select();
+        document.execCommand('copy');
+        
+        // Show feedback
+        const message = document.createElement('div');
+        message.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-fade-in-out';
+        message.textContent = 'Link copied to clipboard!';
+        document.body.appendChild(message);
+        
+        setTimeout(() => message.remove(), 2000);
+    }
+    
+    // Close modal when clicking outside
+    document.getElementById('shareModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeShareModal();
+        }
+    });
+    </script>
+
 </body>
 
 </html>
